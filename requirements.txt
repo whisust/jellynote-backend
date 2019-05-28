@@ -1,2 +1,5 @@
 psycopg2
 yoyo-migrations
+flask
+flask-blueprint
+configobj
