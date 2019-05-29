@@ -3,3 +3,4 @@ yoyo-migrations
 flask
 flask-blueprint
 configobj
+dataclasses-json
