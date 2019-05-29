@@ -3,6 +3,8 @@
 This is a python 3.7 test backend.
 It supports http operations on User, Song, Notification.
 
+Formatting is done with the Intellij default formatter (should be PEP8)
+
 # Run
 
 To run, ensure you have a running Postgres database.
