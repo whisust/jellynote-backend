@@ -6,7 +6,7 @@ import config
 import routes
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--conf", help="path to conf file")
+parser.add_argument("--conf", help="path to conf file", default=None)
 
 app = Flask(__name__)
 
