@@ -1,5 +1,5 @@
 from flask import request, make_response, Blueprint
-from models import User
+from models.jellynote import User
 from datetime import datetime
 
 users_bp = Blueprint('users', __name__)
