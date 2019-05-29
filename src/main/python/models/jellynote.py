@@ -1,9 +1,12 @@
 from dataclasses import dataclass, field
-from dataclasses_json import dataclass_json
-from enum import Enum, auto
-from typing import List, NewType
 from datetime import datetime
+from enum import auto
+from typing import List, NewType
+
+from dataclasses_json import dataclass_json
 from marshmallow import fields
+
+from . import AutoName
 
 UserId = NewType('UserId', int)
 
@@ -13,11 +16,6 @@ iso_encoded_datetime = field(
         'decoder': datetime.fromisoformat,
         'mm_field': fields.DateTime(format='iso')
     }})
-
-
-class AutoName(Enum):
-    def _generate_next_value_(name, start, count, last_values):
-        return name
 
 
 class Instrument(AutoName):
