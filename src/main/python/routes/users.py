@@ -1,6 +1,8 @@
-from flask import request, make_response
+from flask import request, make_response, Blueprint
+from models import User
+from datetime import datetime
 
-from . import users_bp, User
+users_bp = Blueprint('users', __name__)
 
 user_list = []
 
@@ -20,7 +22,7 @@ def user(user_id):
 
 def create_user(data):
     user_list.append(
-        User(id=len(user_list), name=data["name"], mail=data["mail"], created_at=0, instruments=['ins1', 'ins2']))
+        User(id=len(user_list), name=data["name"], mail=data["mail"], created_at=datetime.now(), instruments=['ins1', 'ins2']))
     resp = make_response(user_list[-1].to_json(), 200)
     resp.headers['Content-Type'] = "application/json"
     return resp
