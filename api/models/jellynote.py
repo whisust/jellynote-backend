@@ -10,12 +10,14 @@ from . import AutoName
 
 UserId = NewType('UserId', int)
 
-iso_encoded_datetime = field(
-    metadata={'dataclasses_json': {
-        'encoder': datetime.isoformat,
-        'decoder': datetime.fromisoformat,
-        'mm_field': fields.DateTime(format='iso')
-    }})
+
+def iso_encoded_datetime():
+    return field(default=datetime.now(),
+                 metadata={'dataclasses_json': {
+                     'encoder': datetime.isoformat,
+                     'decoder': datetime.fromisoformat,
+                     'mm_field': fields.DateTime(format='iso')
+                 }})
 
 
 class Instrument(AutoName):
@@ -31,6 +33,7 @@ class User:
     """User representation"""
     id: UserId
     name: str
-    mail: str
-    created_at: datetime = iso_encoded_datetime
+    email: str
     instruments: List[Instrument] = field(default_factory=list)
+    created_at: datetime = iso_encoded_datetime()
+    updated_at: datetime = iso_encoded_datetime()
