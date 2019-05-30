@@ -1,0 +1,32 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:11.3
+    expose:
+      - 5432
+    ports:
+      - 5532:5432
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "jelly"
+      POSTGRES_PASSWORD: "jellyn0te"
+      POSTGRES_DB: jellynote
+
+  api:
+    image: jellynote-api:latest
+    environment:
+      env: dev
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: jellynote
+      DB_USER: "jelly"
+      DB_PASSWORD: "jellyn0te"
+      SERVER_PORT: 7999
+      RUN_MIGRATION: "true"
+    ports:
+      - 8000:7999
+    depends_on:
+      - postgres
+    links:
+      - postgres
