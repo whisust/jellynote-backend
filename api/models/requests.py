@@ -21,7 +21,7 @@ class UserCreationRequest:
 
     def validate(self):
         non_empty("name")(self.name)
-        match_regex("email", EMAIL_REGEX)
+        match_regex("email", EMAIL_REGEX)(self.email)
 
 
 UserCreationRequestSchema = UserCreationRequest.schema()
