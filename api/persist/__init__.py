@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import List
+from models.errors import BaseError
 import psycopg2
 
 connection_info = {
@@ -22,15 +23,28 @@ class Table(object):
     def all_fields(self):
         return ', '.join(self.fields)
 
-    def all_fields_aliased(self, alias=self.alias):
+    def all_fields_aliased(self):
         return ', '.join(map(lambda x: alias + '.' + x, self.fields))
 
 
-Users = Table('users', 'u', ['id', 'name', 'email', 'instruments', 'created_at', 'updated_at'])
+Users = Table('users',
+              'u',
+              ['id', 'name', 'email', 'instruments', 'created_at', 'updated_at'])
 
 tables = [Users]
 
-# with conn.cursor() as cur:
-#     cur.execute("""SELECT id, name, email, instruments, created_at, updated_at FROM users""")
-#     for row in cur.fetchall():
-#         print(row)
+
+@dataclass(frozen=True)
+class InsertionError(BaseError):
+    message: str
+
+
+@dataclass(frozen=True)
+class PersistError(BaseError):
+    message: str
+    exception: Exception
+
+
+@dataclass(frozen=True)
+class UpdateError(BaseError):
+    message: str
