@@ -5,16 +5,14 @@ from api.models.jellynote import Instrument
 import re
 
 
-class TestSerdeMethods(object):
+class TestValidatorsMethods(object):
 
     def test_validate_not_empty_nominal(self):
-        validator = validators.non_empty('name')
-        assert validator('guitar') == 'guitar'
+        assert validators.non_empty('name')('guitar') == 'guitar'
 
     def test_validate_not_empty_failure(self):
         with pytest.raises(ValueError):
-            validator = validators.non_empty('name')
-            validator('')
+            validators.non_empty('name')('')
 
     def test_validate_regex_nominal(self):
         validator = validators.match_regex('number', re.compile(r'[0-9]+'), '1234')
