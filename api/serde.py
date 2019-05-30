@@ -1,6 +1,6 @@
 from typing import Callable
 
-from .models import AutoName
+from models import AutoName
 
 
 def format_capitalize(value: str):
