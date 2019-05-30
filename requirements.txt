@@ -5,3 +5,4 @@ flask
 flask-blueprint
 configobj
 dataclasses-json
+pytest
