@@ -10,6 +10,7 @@ from . import AutoName
 from serde import decode_enum_iterable
 
 UserId = NewType('UserId', int)
+SongId = NewType('SongId', int)
 
 
 def iso_encoded_datetime():
@@ -35,7 +36,7 @@ class User:
     id: UserId
     name: str
     email: str
-    instruments: List[Instrument] = field(default_factory=list)
+    instruments: List[Instrument]
     created_at: datetime = iso_encoded_datetime()
     updated_at: datetime = iso_encoded_datetime()
 
@@ -47,3 +48,22 @@ class User:
                     instruments=decode_enum_iterable(Instrument)(row[3]),
                     created_at=row[4],
                     updated_at=row[5])
+
+
+@dataclass_json
+@dataclass(frozen=True)
+class Song:
+    """Song representation"""
+    id: SongId
+    title: str
+    instruments: List[Instrument]
+    created_at: datetime = iso_encoded_datetime()
+    updated_at: datetime = iso_encoded_datetime()
+
+    @staticmethod
+    def from_row(row):
+        return Song(id=row[0],
+                    title=row[1],
+                    instruments=decode_enum_iterable(Instrument)(row[2]),
+                    created_at=row[3],
+                    updated_at=row[4])
