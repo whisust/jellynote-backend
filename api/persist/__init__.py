@@ -45,17 +45,17 @@ Users = Table('users',
 tables = [Users]
 
 
-@dataclass(frozen=True)
+@dataclass
 class InsertionError(BaseError):
     message: str
 
 
-@dataclass(frozen=True)
+@dataclass
 class PersistError(BaseError):
     message: str
     exception: Exception
 
 
-@dataclass(frozen=True)
+@dataclass
 class UpdateError(BaseError):
     message: str
