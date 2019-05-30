@@ -8,18 +8,27 @@ import routes
 parser = argparse.ArgumentParser()
 parser.add_argument("--conf", help="path to conf file", default=None)
 
-app = Flask(__name__)
+flask_app = Flask(__name__)
 
 
-def run():
+def parse_conf():
+    global conf
     args = parser.parse_args()
     conf = config.load(args.conf)
 
-    app.register_blueprint(routes.users, url_prefix='/users')
 
-    app.run(port=conf["server"]["port"], debug=True)
+def build_app():
+    global flask_app
+    flask_app.register_blueprint(routes.users, url_prefix='/users')
 
-    #todo configure for prod run and not only debug
+
+def run():
+    global flask_app
+    parse_conf()
+    build_app()
+    flask_app.run(port=conf["server"]["port"], debug=True)
+
+    # todo configure for prod run and not only debug
 
 
 if __name__ == '__main__':
