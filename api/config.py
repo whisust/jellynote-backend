@@ -21,7 +21,7 @@ class DBConfig:
     port: int = _envOr('DB_PORT', 5432, to_int)
     host: str = _envOr('DB_HOST', 'localhost')
     user: str = _envOr('DB_USER', 'jelly')
-    password: str = _envOr('DB_USER', 'j3llynote')
+    password: str = _envOr('DB_PASSWORD', 'j3llynote')
     database: str = _envOr('DB_NAME', 'jellynote')
 
 
