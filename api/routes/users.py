@@ -8,20 +8,41 @@ from .utils import json_response
 
 users_bp = Blueprint('users', __name__)
 
-user_list = []
-
 
 @users_bp.route('', methods=['POST'])
 def index():
     return create_user(request.json)
 
 
-@users_bp.route('/<int:user_id>', methods=['PUT', 'DELETE'])
+@users_bp.route('/<int:user_id>', methods=['PUT', 'DELETE', 'GET'])
 def user(user_id):
+    us_id = UserId(user_id)
     if request.method == 'PUT':
-        return update_user(UserId(user_id), request.json)
-    else: # DELETE
-        return "Still not implemented " + str(user_id), 500
+        return update_user(us_id, request.json)
+    elif request.method == 'DELETE':
+        return delete_user(us_id)
+    else:
+        return get_user(us_id)
+
+
+def get_user(user_id: UserId):
+    try:
+        user = users.find(user_id)
+        if user is None:
+            response, code = (NotFoundError("user_id " + str(user_id) + " not found"), 404)
+        else:
+            response, code = user, 200
+    except Exception as e:
+        response, code = map_error(e)
+    return json_response(response, code)
+
+
+def delete_user(user_id: UserId):
+    try:
+        users.delete(user_id)
+        return '', 204
+    except Exception as e:
+        return map_error(e)
 
 
 def update_user(user_id: UserId, data):
