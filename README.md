@@ -36,3 +36,7 @@ TODO
 # Metrics
 
 TODO
+
+# Known problems
+
+`dataclass-json` does not support yet serde for enums, the commit to handle it have been done a few days ago (26 May) so there will be a few boilerplate lines waiting for the last version.
