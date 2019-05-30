@@ -4,6 +4,8 @@ from models.requests import UserCreationRequest, UserCreationRequestSchema
 from models.errors import BaseError
 from marshmallow.exceptions import ValidationError
 from datetime import datetime
+from persist import users, InsertionError
+
 import traceback, sys
 
 users_bp = Blueprint('users', __name__)
@@ -29,19 +31,16 @@ def create_user(data):
     try:
         user_req = UserCreationRequestSchema.load(data)
         user_req.validate()
-        (response, code) = (User(0, user_req.name, user_req.email, user_req.instruments,
-                                 created_at=datetime.now(),
-                                 updated_at=datetime.now()),
-                            200)
+        new_user = users.insert(user_req)
+        (response, code) = (new_user, 200)
     except ValueError as e:  # //  "instruments": ["guitar", "piano"]
         response, code = (BaseError("Invalid field : " + e.args[0]), 400)
     except KeyError as e:
         response, code = (BaseError("Missing field : " + e.args[0]), 400)
+    except InsertionError as e:
+        response, code = (e, 409)
     except ValidationError as e:
         response, code = (BaseError(e.args), 400)
-    # except Exception as e:
-    #     traceback.print_exc(limit=10, file=sys.stdout)
-    #     response, code = (BaseError(str(e)), 500)
     resp = make_response(response.to_json(), code)
     resp.headers['Content-Type'] = "application/json"
     return resp
