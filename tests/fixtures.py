@@ -1,5 +1,6 @@
 import random, string
 import pytest
+
 from random_utils import *
 
 
@@ -8,6 +9,13 @@ def new_user():
     from persist import users
     req = random_user_creation_request()
     yield users.insert(req)
+
+
+@pytest.fixture(scope='function')
+def new_song():
+    from persist import songs
+    req = random_song_creation_request()
+    yield songs.insert(req)
 
 
 @pytest.fixture

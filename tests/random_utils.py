@@ -30,3 +30,11 @@ def random_user_update_request():
     return UserUpdateRequest(random_optional(random_string(10)),
                              random_optional(random_mail()),
                              random_optional(random_enum_list(Instrument)))
+
+
+def random_song_creation_request():
+    return SongCreationRequest(random_string(10), random_enum_list(Instrument))
+
+
+def random_song_update_request():
+    return SongUpdateRequest(random_string(10))
