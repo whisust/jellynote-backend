@@ -1,7 +1,7 @@
 import pytest
 
 from models.jellynote import UserId
-from persist import users
+from persist import users, UpdateError, InsertionError
 from datetime import datetime
 from random_utils import *
 from fixtures import new_user
@@ -19,6 +19,12 @@ def test_user_insert():
     assert isinstance(user.updated_at, datetime)
 
 
+def test_user_insert_conflict(new_user):
+    req = UserCreationRequest(name=random_string(10), email=new_user.email, instruments=random_enum_list(Instrument))
+    with pytest.raises(InsertionError):
+        users.insert(req)
+
+
 def test_list_all(new_user):
     lst = users.list_all(10)
     assert len(lst) <= 10
@@ -33,3 +39,28 @@ def test_find(new_user):
 def test_find_if_none():
     user = users.find(UserId(0))
     assert user is None
+
+
+def test_update(new_user):
+    req = random_user_update_request()
+    updated_user = users.update(new_user.id, req)
+    assert updated_user.id == new_user.id
+    if req.name is not None:
+        assert updated_user.name == req.name
+
+    if req.email is not None:
+        assert updated_user.email == req.email
+
+    if req.instruments is not None:
+        assert updated_user.instruments == req.instruments
+
+    assert updated_user.updated_at > new_user.updated_at
+
+
+def test_update_conflict(new_user):
+    new_user_req = random_user_creation_request()
+    second_user = users.insert(new_user_req)
+
+    req = UserUpdateRequest(name=None, email=second_user.email, instruments=None)
+    with pytest.raises(UpdateError):
+        users.update(new_user.id, req)
