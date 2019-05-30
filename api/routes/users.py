@@ -72,6 +72,4 @@ def create_user(data):
         response, code = (e, 409)
     except Exception as e:
         response, code = map_error(e)
-    resp = make_response(response.to_json(), code)
-    resp.headers['Content-Type'] = "application/json"
     return json_response(response, code)
