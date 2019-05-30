@@ -4,6 +4,7 @@ from models.errors import BaseError
 import psycopg2
 from contextlib import contextmanager
 
+#TODO cleanup and pick credentials from conf
 connection_info = {
     'database': "jellynote",
     'user': "jelly",
@@ -42,7 +43,11 @@ Users = Table('users',
               'u',
               ['id', 'name', 'email', 'instruments', 'created_at', 'updated_at'])
 
-tables = [Users]
+Songs = Table('songs',
+              's',
+              ['id', 'title', 'instruments', 'created_at', 'updated_at'])
+
+tables = [Users, Songs]
 
 
 @dataclass
