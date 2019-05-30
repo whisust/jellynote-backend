@@ -1,9 +1,11 @@
 from . import conn, Users, InsertionError, new_transaction
 
-from models.jellynote import User
+from models.jellynote import User, UserId
 from models.requests import UserCreationRequest
 
 import psycopg2
+
+from typing import Optional, List
 
 from serde import encode_enum_iterable
 
@@ -14,17 +16,29 @@ def _list_query(limit: int):
 
 _insert_query = "INSERT INTO " + Users.name + " (name, email, instruments) VALUES (%s, %s, %s) RETURNING " + Users.all_fields()
 
+_find_one_query = "SELECT " + Users.all_fields() + " FROM " + Users.name + " WHERE id=%s"
 
-def list_all(limit: int):
-    with conn.cursor() as cur:
+
+def list_all(limit: int) -> List[User]:
+    with new_transaction() as cur:
         cur.execute(_list_query(limit))
         return [User.from_row(row) for row in cur.fetchall()]
 
 
 def insert(req: UserCreationRequest) -> User:
-    with new_transaction() as cursor:
+    with new_transaction() as cur:
         try:
-            cursor.execute(_insert_query, (req.name, req.email, encode_enum_iterable(req.instruments)))
-            return User.from_row(cursor.fetchone())
+            cur.execute(_insert_query, (req.name, req.email, encode_enum_iterable(req.instruments)))
+            return User.from_row(cur.fetchone())
         except psycopg2.Error as e:
             raise InsertionError("A user with email=" + req.email + " already exists")
+
+
+def find(user_id: UserId) -> Optional[User]:
+    with new_transaction() as cur:
+        cur.execute(_find_one_query, (user_id,))
+        row = cur.fetchone()
+        if row is not None:
+            return User.from_row(row)
+        else:
+            return None

@@ -1,4 +1,6 @@
 import pytest
+
+from models.jellynote import UserId
 from persist import users
 from datetime import datetime
 from random_utils import *
@@ -21,3 +23,13 @@ def test_list_all(new_user):
     lst = users.list_all(10)
     assert len(lst) <= 10
     assert new_user in lst
+
+
+def test_find(new_user):
+    user = users.find(new_user.id)
+    assert user == new_user
+
+
+def test_find_if_none():
+    user = users.find(UserId(0))
+    assert user is None
