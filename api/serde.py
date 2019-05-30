@@ -5,7 +5,7 @@ def format_capitalize(value: str):
     return value.lower().capitalize()
 
 
-def decode_enum(enum_type, value_formatter = format_capitalize):
+def decode_enum(enum_type, value_formatter=format_capitalize):
     """
     Generate a function that either find a case insensitive version of an item or raise a ValueError
     :param enum_type: the enum class used for decoding
@@ -19,7 +19,7 @@ def decode_enum(enum_type, value_formatter = format_capitalize):
     return _decode_or_error
 
 
-def decode_enum_iterable(enum_type, format_value = format_capitalize):
+def decode_enum_iterable(enum_type, format_value=format_capitalize):
     """
     Generate a function that either find a case insensitive version of a list of items or raise a ValueError
     :param enum_type: the enum class used for decoding
@@ -31,3 +31,11 @@ def decode_enum_iterable(enum_type, format_value = format_capitalize):
         return [enum_type(format_value(str(value))) for value in values]
 
     return _decode_or_error
+
+
+def encode_enum(item):
+    return item.value
+
+
+def encode_enum_iterable(items):
+    return [encode_enum(item) for item in items]
