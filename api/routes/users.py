@@ -1,13 +1,17 @@
 from flask import request, make_response, Blueprint
 from models.jellynote import User
+from models.requests import UserCreationRequest, UserCreationRequestSchema
+from models.errors import BaseError
+from marshmallow.exceptions import ValidationError
 from datetime import datetime
+import traceback, sys
 
 users_bp = Blueprint('users', __name__)
 
 user_list = []
 
 
-@users_bp.route('/', methods=['POST'])
+@users_bp.route('', methods=['POST'])
 def index():
     return create_user(request.json)
 
@@ -21,8 +25,18 @@ def user(user_id):
 
 
 def create_user(data):
-    user_list.append(
-        User(id=len(user_list), name=data["name"], mail=data["mail"], created_at=datetime.now(), instruments=['ins1', 'ins2']))
-    resp = make_response(user_list[-1].to_json(), 200)
+    response, code = "{}", 500
+    try:
+        user_req = UserCreationRequestSchema.load(data)
+        user_req.validate()
+        print(user_req)
+        response = User(0, user_req.name, user_req.email, datetime.now(), datetime.now(), list(user_req.instruments))
+        code = 200
+    except (ValueError, ValidationError, KeyError) as e:
+        response, code = (BaseError(str(e.args)), 400)
+    except Exception as e:
+        traceback.print_exc(limit=10, file=sys.stdout)
+        response, code = (BaseError(str(e)), 500)
+    resp = make_response(response.to_json(), code)
     resp.headers['Content-Type'] = "application/json"
     return resp

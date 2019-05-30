@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import List
 import re
 from validators import *
+from serde import *
 from dataclasses_json import dataclass_json
 from marshmallow import fields
 
@@ -21,3 +22,6 @@ class UserCreationRequest:
     def validate(self):
         non_empty("name")(self.name)
         match_regex("email", EMAIL_REGEX)
+
+
+UserCreationRequestSchema = UserCreationRequest.schema()
