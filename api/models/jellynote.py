@@ -7,6 +7,7 @@ from dataclasses_json import dataclass_json
 from marshmallow import fields
 
 from . import AutoName
+from serde import decode_enum_iterable
 
 UserId = NewType('UserId', int)
 
@@ -37,3 +38,12 @@ class User:
     instruments: List[Instrument] = field(default_factory=list)
     created_at: datetime = iso_encoded_datetime()
     updated_at: datetime = iso_encoded_datetime()
+
+    @staticmethod
+    def from_row(row):
+        return User(id=row[0],
+                    name=row[1],
+                    email=row[2],
+                    instruments=decode_enum_iterable(Instrument)(row[3]),
+                    created_at=row[4],
+                    updated_at=row[5])
