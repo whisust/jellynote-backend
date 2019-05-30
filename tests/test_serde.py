@@ -1,5 +1,5 @@
 import pytest
-import api
+
 from api import serde
 from api.models.jellynote import Instrument
 

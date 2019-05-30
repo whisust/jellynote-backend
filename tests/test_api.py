@@ -1,5 +1,5 @@
 import pytest
-from api.app import create_app
+from app import create_app
 
 
 @pytest.fixture
@@ -29,6 +29,7 @@ def test_user_creation(client):
     assert result.json["created_at"] is not None
     assert result.json["updated_at"] is not None
 
+
 def test_user_creation_bad_email(client):
     result = client.post('/users', json={
         "name": "testestes",
@@ -49,6 +50,7 @@ def test_user_creation_empty_name(client):
 
     assert result.status_code == 400
     assert result.json["message"] == "Invalid field : name should not be empty"
+
 
 def test_user_creation_empty_instruments(client):
     result = client.post('/users', json={

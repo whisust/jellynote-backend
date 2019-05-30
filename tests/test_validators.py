@@ -1,8 +1,8 @@
-import pytest
-import api
-from api import validators
-from api.models.jellynote import Instrument
 import re
+
+import pytest
+
+import validators
 
 
 class TestValidatorsMethods(object):
