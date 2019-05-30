@@ -55,7 +55,7 @@ class SongCreationRequest:
     instruments: List[Instrument] = field(metadata={'dataclasses_json': {'decoder': decode_enum_iterable(Instrument)}})
 
     def validate(self):
-        non_empty("name")(self.name)
+        non_empty("name")(self.title)
         non_empty("instruments")(self.instruments)
 
 
@@ -66,7 +66,7 @@ class SongUpdateRequest:
     title: str
 
     def validate(self):
-        non_empty("name")(self.name)
+        non_empty("name")(self.title)
 
 
 UserCreationRequestSchema = UserCreationRequest.schema()
