@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List
 from models.errors import BaseError
 import psycopg2
+from contextlib import contextmanager
 
 connection_info = {
     'database': "jellynote",
@@ -12,6 +13,16 @@ connection_info = {
 }
 
 conn = psycopg2.connect(**connection_info)
+
+
+@contextmanager
+def new_transaction():
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                yield cur
+    except psycopg2.Error as e:
+        raise PersistError("An unexpected database exception occured", e)
 
 
 @dataclass(frozen=True)
