@@ -28,6 +28,8 @@ def decode_enum_iterable(enum_type, format_value=format_capitalize):
     """
 
     def _decode_or_error(values):
+        if values is None:
+            return None
         return [enum_type(format_value(str(value))) for value in values]
 
     return _decode_or_error
