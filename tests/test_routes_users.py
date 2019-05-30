@@ -1,5 +1,6 @@
 import pytest
 
+from models.jellynote import User
 from random_utils import *
 from request_utils import remove_none_values
 from fixtures import client
@@ -7,6 +8,18 @@ from fixtures import client
 
 def _or(a, b):
     return b if a is None else a
+
+
+def new_user_from_api(client, req: Optional[UserCreationRequest] = None):
+    _req = random_user_creation_request() if req is None else req
+    instruments_as_str = [i.value for i in _req.instruments]
+    res = client.post('/users', json={
+        "name": _req.name,
+        "email": _req.email,
+        "instruments": instruments_as_str
+    })
+    return User(id=res.json["id"], name=res.json["name"], email=res.json["email"], instruments=_req.instruments,
+                created_at=res.json["created_at"], updated_at=res.json["updated_at"])
 
 
 # POST /users
@@ -85,15 +98,10 @@ def test_update_user_name(client):
     # should be in another fixture but flemme
     creation = random_user_creation_request()
     instruments_as_str = [i.value for i in creation.instruments]
-    creation_result = client.post('/users', json={
-        "name": creation.name,
-        "email": creation.email,
-        "instruments": instruments_as_str
-    })
+    user = new_user_from_api(client, creation)
 
-    user_id = creation_result.json["id"]
     name = "newname"
-    update_result = client.put('/users/' + str(user_id), json={
+    update_result = client.put('/users/' + str(user.id), json={
         "name": name
     })
 
@@ -107,15 +115,10 @@ def test_update_user_email(client):
     # should be in another fixture but flemme
     creation = random_user_creation_request()
     instruments_as_str = [i.value for i in creation.instruments]
-    creation_result = client.post('/users', json={
-        "name": creation.name,
-        "email": creation.email,
-        "instruments": instruments_as_str
-    })
+    user = new_user_from_api(client, creation)
 
-    user_id = creation_result.json["id"]
     email = random_mail()
-    update_result = client.put('/users/' + str(user_id), json={
+    update_result = client.put('/users/' + str(user.id), json={
         "email": email
     })
 
@@ -149,22 +152,17 @@ def test_update_user(client):
     # should be in another fixture but flemme
     creation = random_user_creation_request()
     instruments_as_str = [i.value for i in creation.instruments]
-    creation_result = client.post('/users', json={
-        "name": creation.name,
-        "email": creation.email,
-        "instruments": instruments_as_str
-    })
+    user = new_user_from_api(client, creation)
 
-    user_id = creation_result.json["id"]
     req = random_user_update_request()
-    name = random_string(5) # we force the name to ensure no 3 emtpy params
+    name = random_string(5)  # we force the name to ensure no 3 emtpy params
     updated_instruments_as_str = [i.value for i in req.instruments] if req.instruments is not None else None
     payload = {
         "name": name,
         "email": req.email,
         "instruments": updated_instruments_as_str
     }
-    update_result = client.put('/users/' + str(user_id), json=remove_none_values(payload))
+    update_result = client.put('/users/' + str(user.id), json=remove_none_values(payload))
 
     assert update_result.status_code == 200
     assert update_result.json['name'] == name
@@ -198,3 +196,27 @@ def test_update_user_conflict(client):
     })
 
     assert update_result.status_code == 409
+
+
+# GET /:user_id
+def test_get_user(client):
+    user = new_user_from_api(client)
+    res = client.get('/users/' + str(user.id))
+    assert res.status_code == 200
+    assert res.json['id'] == user.id
+
+
+def test_get_user_none(client):
+    res = client.get('/users/0')
+    assert res.status_code == 404
+
+
+# DELETE /:user_id
+def test_delete_user(client):
+    user = new_user_from_api(client)
+
+    res = client.delete('/users/' + str(user.id))
+    assert res.status_code == 204
+
+    res = client.get('/users/' + str(user.id))
+    assert res.status_code == 404
