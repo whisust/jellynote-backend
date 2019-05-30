@@ -59,3 +59,7 @@ class PersistError(BaseError):
 @dataclass
 class UpdateError(BaseError):
     message: str
+
+
+def is_unique_constraint_violation(err):
+    return err.pgcode == '23505'
