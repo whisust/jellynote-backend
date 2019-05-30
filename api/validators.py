@@ -4,7 +4,7 @@ from typing import Optional
 
 def non_empty(field: str):
     def _test_non_empty(value: str):
-        if len(value) == 0:
+        if value is None or len(value) == 0:
             raise ValueError(field + " should not be empty")
         else:
             return value
