@@ -9,7 +9,7 @@ from serde import encode_enum_iterable
 
 
 def _list_query(limit: int):
-    return "SELECT " + Users.all_fields() + " FROM " + Users.name + " LIMIT " + str(limit)
+    return "SELECT " + Users.all_fields() + " FROM " + Users.name + " ORDER BY updated_at DESC LIMIT " + str(limit)
 
 
 _insert_query = "INSERT INTO " + Users.name + " (name, email, instruments) VALUES (%s, %s, %s) RETURNING " + Users.all_fields()
