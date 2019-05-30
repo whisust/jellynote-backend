@@ -38,4 +38,6 @@ def encode_enum(item):
 
 
 def encode_enum_iterable(items):
+    if items is None:
+        return None
     return [encode_enum(item) for item in items]
