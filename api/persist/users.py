@@ -24,7 +24,11 @@ _find_one_query = "SELECT " + Users.all_fields() + " FROM " + Users.name + " WHE
 def _update_query(req: UserUpdateRequest):
     fields = [f + ' = %s' for f in req.__dataclass_fields__ if req.__getattribute__(f) is not None]
 
-    return "UPDATE " + Users.name + " SET " + ', '.join(fields) + ", updated_at = now() WHERE id = %s" + _returning_clause
+    return "UPDATE " + Users.name + " SET " + ', '.join(
+        fields) + ", updated_at = now() WHERE id = %s" + _returning_clause
+
+
+_delete_query = "DELETE FROM " + Users.name + " WHERE id = %s"
 
 
 def list_all(limit: int) -> List[User]:
@@ -59,8 +63,8 @@ def update(user_id: UserId, req: UserUpdateRequest) -> User:
     with new_transaction() as cur:
         try:
             update_params = [i for i in
-                         [req.name, req.email, encode_enum_iterable(req.instruments)] if i is not None
-                         ] + [user_id]
+                             [req.name, req.email, encode_enum_iterable(req.instruments)] if i is not None
+                             ] + [user_id]
             cur.execute(_update_query(req), tuple(update_params))
             return User.from_row(cur.fetchone())
         except psycopg2.Error as e:
@@ -68,3 +72,8 @@ def update(user_id: UserId, req: UserUpdateRequest) -> User:
                 raise UpdateError("A user with email=" + req.email + " already exists")
             else:
                 raise
+    
+
+def delete(user_id: UserId):
+    with new_transaction() as cur:
+        cur.execute(_delete_query, (user_id,))

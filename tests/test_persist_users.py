@@ -64,3 +64,10 @@ def test_update_conflict(new_user):
     req = UserUpdateRequest(name=None, email=second_user.email, instruments=None)
     with pytest.raises(UpdateError):
         users.update(new_user.id, req)
+
+
+def test_delete_user(new_user):
+    users.delete(new_user.id)
+
+    u = users.find(new_user.id)
+    assert u is None
