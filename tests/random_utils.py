@@ -3,7 +3,7 @@ from models.requests import *
 
 
 def random_string(size: int) -> str:
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(size))
+    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(size))
 
 
 def random_mail() -> str:
