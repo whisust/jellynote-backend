@@ -1,12 +1,10 @@
 from flask import request, make_response, Blueprint
-from models.jellynote import User, UserId
-from models.requests import UserCreationRequest, UserCreationRequestSchema
-from models.errors import BaseError, map_error, NotFoundError
-from marshmallow.exceptions import ValidationError
-from datetime import datetime
-from persist import users, InsertionError
 
-import traceback, sys
+from models.errors import map_error, NotFoundError
+from models.jellynote import UserId
+from models.requests import UserCreationRequestSchema, UserUpdateRequestSchema
+from persist import users, InsertionError
+from .utils import json_response
 
 users_bp = Blueprint('users', __name__)
 
@@ -38,4 +36,4 @@ def create_user(data):
         response, code = map_error(e)
     resp = make_response(response.to_json(), code)
     resp.headers['Content-Type'] = "application/json"
-    return resp
+    return json_response(response, code)
