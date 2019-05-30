@@ -3,14 +3,14 @@ from typing import List
 from models.errors import BaseError
 import psycopg2
 from contextlib import contextmanager
+from config import conf
 
-#TODO cleanup and pick credentials from conf
 connection_info = {
-    'database': "jellynote",
-    'user': "jelly",
-    'password': "j3llynote",
-    'host': "localhost",
-    'port': "5432"
+    'database': conf.db.database,
+    'user': conf.db.user,
+    'password': conf.db.password,
+    'host': conf.db.host,
+    'port': conf.db.port
 }
 
 conn = psycopg2.connect(**connection_info)
@@ -36,7 +36,7 @@ class Table(object):
         return ', '.join(self.fields)
 
     def all_fields_aliased(self):
-        return ', '.join(map(lambda x: alias + '.' + x, self.fields))
+        return ', '.join(map(lambda x: self.alias + '.' + x, self.fields))
 
 
 Users = Table('users',
