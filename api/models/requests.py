@@ -25,4 +25,25 @@ class UserCreationRequest:
         match_regex("email", EMAIL_REGEX)(self.email)
 
 
+@dataclass_json
+@dataclass(frozen=True)
+class UserUpdateRequest:
+    """Request to update a user"""
+    name: Optional[str]
+    email: Optional[str]
+    instruments: Optional[List[Instrument]] = field(
+        metadata={'dataclasses_json': {'decoder': decode_enum_iterable(Instrument)}})
+
+    def validate(self):
+        if self.name is not None:
+            non_empty("name")(self.name)
+
+        if self.instruments is not None:
+            non_empty("instruments")(self.instruments)
+
+        if self.email is not None:
+            match_regex("email", EMAIL_REGEX)(self.email)
+
+
 UserCreationRequestSchema = UserCreationRequest.schema()
+UserUpdateRequestSchema = UserUpdateRequest.schema()
