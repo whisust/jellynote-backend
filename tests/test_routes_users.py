@@ -1,6 +1,7 @@
 import pytest
 
 from random_utils import *
+from request_utils import remove_none_values
 from fixtures import client
 
 
@@ -158,11 +159,12 @@ def test_update_user(client):
     req = random_user_update_request()
     name = random_string(5) # we force the name to ensure no 3 emtpy params
     updated_instruments_as_str = [i.value for i in req.instruments] if req.instruments is not None else None
-    update_result = client.put('/users/' + str(user_id), json={
+    payload = {
         "name": name,
         "email": req.email,
         "instruments": updated_instruments_as_str
-    })
+    }
+    update_result = client.put('/users/' + str(user_id), json=remove_none_values(payload))
 
     assert update_result.status_code == 200
     assert update_result.json['name'] == name
