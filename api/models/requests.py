@@ -33,7 +33,7 @@ class UserUpdateRequest:
     email: Optional[str] = None
     instruments: Optional[List[Instrument]] = field(default=None, metadata={'dataclasses_json': {
         'decoder': decode_enum_iterable(Instrument)}}
-    )
+                                                    )
 
     def validate(self):
         non_all_empty(["name", "email", "instruments"])
@@ -47,5 +47,29 @@ class UserUpdateRequest:
             match_regex("email", EMAIL_REGEX)(self.email)
 
 
+@dataclass_json
+@dataclass(frozen=True)
+class SongCreationRequest:
+    """Request to create a user"""
+    title: str
+    instruments: List[Instrument] = field(metadata={'dataclasses_json': {'decoder': decode_enum_iterable(Instrument)}})
+
+    def validate(self):
+        non_empty("name")(self.name)
+        non_empty("instruments")(self.instruments)
+
+
+@dataclass_json
+@dataclass(frozen=True)
+class SongUpdateRequest:
+    """Request to update a user"""
+    title: str
+
+    def validate(self):
+        non_empty("name")(self.name)
+
+
 UserCreationRequestSchema = UserCreationRequest.schema()
 UserUpdateRequestSchema = UserUpdateRequest.schema()
+SongCreationRequestSchema = SongCreationRequest.schema()
+SongUpdateRequestSchema = SongUpdateRequest.schema()
