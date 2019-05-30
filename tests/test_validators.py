@@ -22,3 +22,10 @@ class TestValidatorsMethods(object):
         with pytest.raises(ValueError):
             validator = validators.match_regex('number', re.compile(r'[0-9]+'), '1234')
             validator('not a number')
+
+    def test_validate_non_all_empty_nominal(self):
+        assert validators.non_all_empty(['number'])(['1234', None]) == ['1234']
+
+    def test_validate_non_all_empty_failure(self):
+        with pytest.raises(ValueError):
+            validators.non_all_empty(['number'])([None, None])
