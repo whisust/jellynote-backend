@@ -1,19 +1,7 @@
 import pytest
-from app import create_app
+
 from random_utils import *
-
-
-@pytest.fixture
-def client():
-    app = create_app()
-    app.config['TESTING'] = True
-    client = app.test_client()
-
-    ctx = app.app_context()
-    ctx.push()
-    yield client
-
-    ctx.pop()
+from fixtures import client
 
 
 def test_user_creation(client):
