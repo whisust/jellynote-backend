@@ -20,6 +20,7 @@ def create_app():
     # TODO
     # app.config.from_pyfile(config_filename)
     app.register_blueprint(routes.users, url_prefix='/users')
+    app.register_blueprint(routes.songs, url_prefix='/songs')
     return app
 
 
