@@ -29,13 +29,12 @@ def create_user(data):
     try:
         user_req = UserCreationRequestSchema.load(data)
         user_req.validate()
-        print(user_req)
         (response, code) = (User(0, user_req.name, user_req.email, user_req.instruments,
                                  created_at=datetime.now(),
                                  updated_at=datetime.now()),
                             200)
     except ValueError as e:  # //  "instruments": ["guitar", "piano"]
-        response, code = (BaseError("Invalid field " + e.args[0]), 400)
+        response, code = (BaseError("Invalid field : " + e.args[0]), 400)
     except KeyError as e:
         response, code = (BaseError("Missing field : " + e.args[0]), 400)
     except ValidationError as e:
