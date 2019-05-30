@@ -29,12 +29,14 @@ class UserCreationRequest:
 @dataclass(frozen=True)
 class UserUpdateRequest:
     """Request to update a user"""
-    name: Optional[str]
-    email: Optional[str]
-    instruments: Optional[List[Instrument]] = field(
-        metadata={'dataclasses_json': {'decoder': decode_enum_iterable(Instrument)}})
+    name: Optional[str] = None
+    email: Optional[str] = None
+    instruments: Optional[List[Instrument]] = field(default=None, metadata={'dataclasses_json': {
+        'decoder': decode_enum_iterable(Instrument)}}
+    )
 
     def validate(self):
+        non_all_empty(["name", "email", "instruments"])
         if self.name is not None:
             non_empty("name")(self.name)
 
