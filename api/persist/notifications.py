@@ -20,6 +20,8 @@ def _list_query_pagination(req: PaginatedQuery):
 
 _insert_query = "INSERT INTO " + Notifications.name + " (song_id, user_id, message) VALUES %s"
 
+_count_query = "SELECT COUNT(*) FROM " + Notifications.name + " WHERE user_id = %s"
+
 
 def list_all(user_id, req) -> List[Song]:
     with new_transaction() as cur:
@@ -33,3 +35,9 @@ def list_all(user_id, req) -> List[Song]:
 def insert(notification_creation_values):
     with new_transaction() as cur:
         execute_values(cur, _insert_query, notification_creation_values)
+
+
+def count(user_id):
+    with new_transaction() as cur:
+        cur.execute(_count_query, (user_id,))
+        return cur.fetchone()[0]
