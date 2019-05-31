@@ -30,3 +30,8 @@ def test_list_ranged_query(new_notification_value):
     notifs = notifications.list_all(new_notification_value[1], req)
 
     assert len(notifs) >= 1
+
+
+def test_count(new_notification_value):
+    count = notifications.count(new_notification_value[1])
+    assert count == 1

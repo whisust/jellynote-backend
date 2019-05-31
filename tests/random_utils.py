@@ -1,4 +1,6 @@
 import random, string
+
+from models.jellynote import SongId, UserId
 from models.requests import *
 
 
@@ -40,5 +42,9 @@ def random_song_update_request():
     return SongUpdateRequest(random_string(10))
 
 
-def random_notification_insert_value():
-    return SongId(random.randint(1, 99999)), UserId(random.randint(1, 99999)), random_string(30)
+def random_notification_insert_value(user_id=None):
+    return SongId(random.randint(1, 99999)), user_id if user_id is not None else UserId(random.randint(1, 99999)), random_string(30)
+
+
+def random_notification_insert_values(count, user_id=None):
+    return [random_notification_insert_value(user_id) for _ in range(0, count)]
