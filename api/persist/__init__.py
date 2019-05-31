@@ -81,9 +81,21 @@ class RangeQuery:
     furthest: datetime
     closest: datetime
 
+    @staticmethod
+    def from_query_string(query_string):
+        d1, d2 = [datetime.fromisoformat(x) for x in query_string.split('_')]
+        return RangeQuery(furthest=min(d1, d2), closest=max(d1, d2))
+
 
 @dataclass(frozen=True)
 class PaginatedQuery:
     """Holds offset and limit values for a paginated query"""
     offset: int
     count: int
+
+    @staticmethod
+    def from_query_string(query_string):
+        low, up = [int(x) for x in query_string.split('_')]
+        offset = low
+        count = up - low
+        return PaginatedQuery(offset, count)
