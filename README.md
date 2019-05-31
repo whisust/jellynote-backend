@@ -52,7 +52,7 @@ TODO
 # Checklist
 
 Technical:
-
+- [x] project setup
 - [x] dataclasses
 - [x] serializers
 - [x] persistence (users, songs)
