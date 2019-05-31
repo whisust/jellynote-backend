@@ -30,7 +30,13 @@ def _update_query(req: UserUpdateRequest):
 
 _delete_query = "DELETE FROM " + Users.name + " WHERE id = %s"
 
-_list_by_instruments_query = "SELECT " + Users.all_fields() + " FROM " + Users.name + " WHERE %s = ANY(instruments)"
+_list_by_instruments_query = """
+SELECT """ + Users.all_fields() + """
+FROM """ + Users.name + """
+WHERE id IN (SELECT v.id
+             FROM (SELECT id, unnest(instruments) instrument FROM users) AS v(id, instrument)
+             WHERE instrument = ANY (%s))
+"""
 
 
 def list_all(limit: int) -> List[User]:
@@ -38,9 +44,10 @@ def list_all(limit: int) -> List[User]:
         cur.execute(_list_query(limit))
         return [User.from_row(row) for row in cur.fetchall()]
 
+
 def list_by_instruments(instruments: List[Instrument]):
     with new_transaction() as cur:
-        cur.execute(_list_by_instruments_query, (encode_enum_iterable(instruments)))
+        cur.execute(_list_by_instruments_query, (encode_enum_iterable(instruments),))
         return [User.from_row(row) for row in cur.fetchall()]
 
 
@@ -79,7 +86,7 @@ def update(user_id: UserId, req: UserUpdateRequest) -> User:
                 raise UpdateError("A user with email=" + req.email + " already exists")
             else:
                 raise
-    
+
 
 def delete(user_id: UserId):
     with new_transaction() as cur:
