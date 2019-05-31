@@ -83,3 +83,20 @@ class Notification:
     @staticmethod
     def from_row(row):
         return Notification(id=row[0], song_id=row[1], user_id=row[2], message=row[3], created_at=row[4])
+
+    def to_minified(self):
+        return MinifiedNotification(self.message)
+
+
+@dataclass_json
+@dataclass(frozen=True)
+class MinifiedNotification:
+    """contains only the message of a notifications"""
+    message: str
+
+
+@dataclass_json
+@dataclass(frozen=True)
+class MinifiedNotifications:
+    """contains only the message of a notifications"""
+    notifications: List[MinifiedNotification]

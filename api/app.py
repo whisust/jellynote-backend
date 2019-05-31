@@ -11,6 +11,7 @@ def create_app():
     print(conf)
     app.register_blueprint(routes.users, url_prefix='/users')
     app.register_blueprint(routes.songs, url_prefix='/songs')
+    app.register_blueprint(routes.notifications, url_prefix='/notifications')
     return app
 
 
