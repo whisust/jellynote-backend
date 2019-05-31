@@ -75,4 +75,6 @@ def test_delete_user(new_user):
 
 def test_list_by_instrument(new_user):
     us = users.list_by_instruments(new_user.instruments)
-    assert new_user in us
+    instruments_set = set(new_user.instruments)
+    for u in us:
+        assert not set(u.instruments).isdisjoint(instruments_set)

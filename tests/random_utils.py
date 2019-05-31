@@ -17,7 +17,9 @@ def random_enum(clazz):
 
 
 def random_enum_list(clazz):
-    return random.choices(list(clazz))
+    lst = list(clazz)
+    max_count = len(lst)
+    return list(set(random.choices(lst, k=random.randint(1, max_count))))
 
 
 def random_user_creation_request():
