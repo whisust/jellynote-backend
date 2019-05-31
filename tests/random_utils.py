@@ -16,14 +16,15 @@ def random_enum(clazz):
     return random.choice(list(clazz))
 
 
-def random_enum_list(clazz):
+def random_enum_list(clazz, min_count=1, max_count=None):
     lst = list(clazz)
-    max_count = len(lst)
-    return list(set(random.choices(lst, k=random.randint(1, max_count))))
+    _max_count = len(lst) if max_count is None else max_count
+    return list(set(random.choices(lst, k=random.randint(min_count, max_count))))
 
 
-def random_user_creation_request():
-    return UserCreationRequest(random_string(10), random_mail(), random_enum_list(Instrument))
+def random_user_creation_request(instruments=None):
+    return UserCreationRequest(random_string(10), random_mail(),
+                               instruments if instruments is not None else random_enum_list(Instrument))
 
 
 def random_optional(filled_value):
@@ -36,8 +37,9 @@ def random_user_update_request():
                              random_optional(random_enum_list(Instrument)))
 
 
-def random_song_creation_request():
-    return SongCreationRequest(random_string(10), random_enum_list(Instrument))
+def random_song_creation_request(instruments=None):
+    return SongCreationRequest(random_string(10),
+                               instruments if instruments is not None else random_enum_list(Instrument))
 
 
 def random_song_update_request():
@@ -45,7 +47,8 @@ def random_song_update_request():
 
 
 def random_notification_insert_value(user_id=None):
-    return SongId(random.randint(1, 99999)), user_id if user_id is not None else UserId(random.randint(1, 99999)), random_string(30)
+    return SongId(random.randint(1, 99999)), user_id if user_id is not None else UserId(
+        random.randint(1, 99999)), random_string(30)
 
 
 def random_notification_insert_values(count, user_id=None):
