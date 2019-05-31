@@ -6,11 +6,12 @@ from typing import List, NewType
 from dataclasses_json import dataclass_json
 from marshmallow import fields
 
-from . import AutoName
 from serde import decode_enum_iterable
+from . import AutoName
 
 UserId = NewType('UserId', int)
 SongId = NewType('SongId', int)
+NotificationId = NewType('SongId', int)
 
 
 def iso_encoded_datetime():
@@ -67,3 +68,18 @@ class Song:
                     instruments=decode_enum_iterable(Instrument)(row[2]),
                     created_at=row[3],
                     updated_at=row[4])
+
+
+@dataclass_json
+@dataclass(frozen=True)
+class Notification:
+    """Notification representation"""
+    id: NotificationId
+    song_id: SongId
+    user_id: UserId
+    message: str
+    created_at: datetime = iso_encoded_datetime()
+
+    @staticmethod
+    def from_row(row):
+        return Notification(id=row[0], song_id=row[1], user_id=row[2], message=row[3], created_at=row[4])

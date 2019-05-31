@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List
 from models.errors import BaseError
 import psycopg2
@@ -47,7 +48,11 @@ Songs = Table('songs',
               's',
               ['id', 'title', 'instruments', 'created_at', 'updated_at'])
 
-tables = [Users, Songs]
+Notifications = Table('notifications',
+                      'n',
+                      ['id', 'song_id', 'user_id', 'message', 'created_at'])
+
+tables = [Users, Songs, Notifications]
 
 
 @dataclass
@@ -68,3 +73,17 @@ class UpdateError(BaseError):
 
 def is_unique_constraint_violation(err):
     return err.pgcode == '23505'
+
+
+@dataclass(frozen=True)
+class RangeQuery:
+    """Holds lower and upper bound for a range query"""
+    furthest: datetime
+    closest: datetime
+
+
+@dataclass(frozen=True)
+class PaginatedQuery:
+    """Holds offset and limit values for a paginated query"""
+    offset: int
+    count: int
