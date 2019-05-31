@@ -38,3 +38,7 @@ def random_song_creation_request():
 
 def random_song_update_request():
     return SongUpdateRequest(random_string(10))
+
+
+def random_notification_insert_value():
+    return SongId(random.randint(1, 99999)), UserId(random.randint(1, 99999)), random_string(30)

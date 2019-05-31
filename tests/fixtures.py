@@ -18,6 +18,14 @@ def new_song():
     yield songs.insert(req)
 
 
+@pytest.fixture(scope='function')
+def new_notification_value():
+    from persist import notifications
+    value = random_notification_insert_value()
+    notifications.insert([value])
+    yield value
+
+
 @pytest.fixture
 def client():
     from app import create_app
