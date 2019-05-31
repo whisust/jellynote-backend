@@ -56,13 +56,14 @@ Technical:
 - [x] dataclasses
 - [x] serializers
 - [x] persistence (users, songs)
-- [ ] persistence (notification)
+- [x] persistence (notification)
 - [x] db migrations
 - [x] configuration
 - [x] routes (users, songs)
-- [ ] routes notifications
+- [x] routes notifications
 - [x] tests (users, songs)
-- [ ] tests notifications
+- [~] tests notifications
+- [ ] gen notifications
 - [x] prod run configuration with gunicorn
 - [x] docker compose
 
@@ -71,5 +72,5 @@ Functional:
 - [x] create, update, delete songs
 - [x] docker image + docker compose 
 - [ ] on song creation, generate notifications
-- [ ] access notifications
+- [x] access notifications
 - [ ] scenario data + script
