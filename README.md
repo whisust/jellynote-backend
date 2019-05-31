@@ -62,8 +62,8 @@ Technical:
 - [x] routes (users, songs)
 - [x] routes notifications
 - [x] tests (users, songs)
-- [~] tests notifications
-- [ ] gen notifications
+- [x] tests notifications
+- [x] gen notifications
 - [x] prod run configuration with gunicorn
 - [x] docker compose
 
@@ -71,6 +71,6 @@ Functional:
 - [x] create, update, delete users
 - [x] create, update, delete songs
 - [x] docker image + docker compose 
-- [ ] on song creation, generate notifications
+- [x] on song creation, generate notifications
 - [x] access notifications
 - [ ] scenario data + script
