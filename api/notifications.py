@@ -23,3 +23,7 @@ def generate_notifications(song: Song):
     t1 = datetime.now()
     print("Done generating " + str(len(notification_values)) + " notifications for " + str(song))
     print("Elapsed: " + str((t1 - t0).total_seconds()))
+
+
+def schedule_generation_from(song: Song):
+    Thread(target=generate_notifications, args=(song,)).start()
