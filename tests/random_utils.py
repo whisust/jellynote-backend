@@ -19,7 +19,7 @@ def random_enum(clazz):
 def random_enum_list(clazz, min_count=1, max_count=None):
     lst = list(clazz)
     _max_count = len(lst) if max_count is None else max_count
-    return list(set(random.choices(lst, k=random.randint(min_count, max_count))))
+    return list(set(random.choices(lst, k=random.randint(min_count, _max_count))))
 
 
 def random_user_creation_request(instruments=None):

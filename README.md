@@ -26,10 +26,7 @@ To initialize it, run `yoyo apply -b`
 
 Unit/Intergation tests are available in the `tests` package.
 To run them, you need an available DB and then:
-`python3 -m pytest`
-
-:warn: Tests work fine on my computer with the Intellij runner, but path is not resolved as it should be, thus the command fails...
-
+`~/dev/jellynote-backend > python3 -m pytest .`
 
 # Docker
 
