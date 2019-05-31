@@ -1,3 +1,5 @@
+from threading import Thread
+
 from flask import request, make_response, Blueprint
 
 from models.errors import map_error, NotFoundError
@@ -5,7 +7,7 @@ from models.jellynote import SongId
 from models.requests import SongCreationRequestSchema, SongUpdateRequestSchema
 from persist import songs
 from routes.utils import json_response
-from notifications import async_notification_generation
+from notifications import generate_notifications
 
 songs_bp = Blueprint('songs', __name__)
 
@@ -32,7 +34,6 @@ def get_song(song_id: SongId):
         if song is None:
             response, code = (NotFoundError("song_id " + str(song_id) + " not found"), 404)
         else:
-            async_notification_generation(song)
             response, code = song, 200
     except Exception as e:
         response, code = map_error(e)
@@ -67,6 +68,7 @@ def create_song(data):
         req = SongCreationRequestSchema.load(data)
         req.validate()
         song = songs.insert(req)
+        Thread(target=generate_notifications, args=(song,)).start()
         response, code = song, 200
     except Exception as e:
         response, code = map_error(e)
