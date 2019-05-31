@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 echo "Waiting for PG to be up"
-sleep 10
+sleep $SLEEP
 echo "Waited enough"
 if [[ "$RUN_MIGRATION" == "true" ]] ; then
     echo "Running migrations on postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME"

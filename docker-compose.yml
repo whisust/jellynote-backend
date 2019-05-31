@@ -24,6 +24,7 @@ services:
       DB_PASSWORD: "jellyn0te"
       SERVER_PORT: 7999
       RUN_MIGRATION: "true"
+      SLEEP: 20 # first pg bootstrap can be a bit long
     ports:
       - 8000:7999
     depends_on:

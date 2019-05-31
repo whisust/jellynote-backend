@@ -18,6 +18,7 @@ ENV DB_NAME jellynote
 ENV SERVER_HOST 127.0.0.1
 ENV SERVER_PORT 8000
 ENV RUN_MIGRATIONS "false"
+ENV SLEEP 15
 
 ADD ./docker/startup.sh startup.sh
 
