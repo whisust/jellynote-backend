@@ -71,3 +71,8 @@ def test_delete_user(new_user):
 
     u = users.find(new_user.id)
     assert u is None
+
+
+def test_list_by_instrument(new_user):
+    us = users.list_by_instruments(new_user.instruments)
+    assert new_user in us

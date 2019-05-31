@@ -1,6 +1,6 @@
 from . import conn, Users, InsertionError, new_transaction, UpdateError, is_unique_constraint_violation
 
-from models.jellynote import User, UserId
+from models.jellynote import User, UserId, Instrument
 from models.requests import UserCreationRequest, UserUpdateRequest
 
 import psycopg2
@@ -30,10 +30,17 @@ def _update_query(req: UserUpdateRequest):
 
 _delete_query = "DELETE FROM " + Users.name + " WHERE id = %s"
 
+_list_by_instruments_query = "SELECT " + Users.all_fields() + " FROM " + Users.name + " WHERE %s = ANY(instruments)"
+
 
 def list_all(limit: int) -> List[User]:
     with new_transaction() as cur:
         cur.execute(_list_query(limit))
+        return [User.from_row(row) for row in cur.fetchall()]
+
+def list_by_instruments(instruments: List[Instrument]):
+    with new_transaction() as cur:
+        cur.execute(_list_by_instruments_query, (encode_enum_iterable(instruments)))
         return [User.from_row(row) for row in cur.fetchall()]
 
 
